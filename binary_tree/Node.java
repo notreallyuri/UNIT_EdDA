@@ -1,8 +1,8 @@
 public class Node {
-  int data;
+  int value;
   Node left, right;
 
-  public Node(int data) {
-    this.data = data;
+  public Node(int value) {
+    this.value = value;
   }
 }

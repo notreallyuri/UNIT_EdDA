@@ -1,18 +1,22 @@
+import java.util.Scanner;
+
 class Main {
   public static void main(String[] args) {
     BinaryTree tree = new BinaryTree();
+    Scanner scanner = new Scanner(System.in);
 
-    // Root Node
-    tree.insert(5);
+    System.out.println("Binary Tree Input (Enter 'q' to stop)");
 
-    // Child Nodes
-    tree.insert(3);
-    tree.insert(7);
-    tree.insert(20);
+    while (true) {
+      System.out.print("Enter a number: ");
+      if (scanner.hasNextInt()) {
+        int value = scanner.nextInt();
+        tree.insert(value);
+      } else {
+        break;
+      }
+    }
 
-    System.out.println("Root: " + tree.root.data);
-    System.out.println("Left child: " + tree.root.left.data);
-    System.out.println("Right child: " + tree.root.right.data);
-    System.out.println("Right child of right child: " + tree.root.right.right.data);
+    scanner.close();
   }
 }
