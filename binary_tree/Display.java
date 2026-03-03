@@ -8,12 +8,40 @@ public class Display extends JPanel {
     this.tree = tree;
   }
 
+  private int getTreeDepth(Node n) {
+    if (n == null)
+      return 0;
+    return 1 + Math.max(getTreeDepth(n.left), getTreeDepth(n.right));
+  }
+
+  @Override
+  public Dimension getPreferredSize() {
+    if (tree.root == null)
+      return new Dimension(800, 600);
+
+    int leafGap = 40;
+
+    int depth = getTreeDepth(tree.root);
+    int height = Math.max(600, (depth * 80) + 100);
+    int width = (int) (Math.pow(2, depth - 1) * leafGap);
+
+    return new Dimension(Math.max(800, width), height);
+  }
+
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
+    if (tree.root == null)
+      return;
+
     Graphics2D g2 = (Graphics2D) g;
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-        RenderingHints.VALUE_ANTIALIAS_ON);
-    draw(g2, tree.root, getWidth() / 2, 60, getWidth() / 4);
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+    int canvasWidth = Math.max(getWidth(), getPreferredSize().width);
+    int centerX = canvasWidth / 2;
+
+    int initialEsp = canvasWidth / 4;
+
+    draw(g2, tree.root, centerX, 60, initialEsp);
   }
 
   void draw(Graphics2D g, Node node, int x, int y, int esp) {

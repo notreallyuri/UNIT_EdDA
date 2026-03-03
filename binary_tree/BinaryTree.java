@@ -1,5 +1,26 @@
+import java.io.*;
+import java.util.*;
+
 public class BinaryTree {
   Node root;
+
+  public void clear() {
+    root = null;
+  }
+
+  private void collectPreOrder(Node node, List<Integer> values) {
+    if (node == null)
+      return;
+    values.add(node.value);
+    collectPreOrder(node.left, values);
+    collectPreOrder(node.right, values);
+  }
+
+  public List<Integer> getAllValues() {
+    List<Integer> values = new ArrayList<>();
+    collectPreOrder(root, values);
+    return values;
+  }
 
   private Node insertRecursive(Node current, int value) {
     if (current == null) {
