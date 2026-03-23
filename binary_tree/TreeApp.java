@@ -13,6 +13,7 @@ public class TreeApp {
   private JButton btnClear = new JButton("Limpar");
   private JButton btnLoad = new JButton("Carregar");
   private JButton btnSave = new JButton("Salvar");
+  private JButton btnSearch = new JButton("Buscar");
 
   public void init() {
     JFrame frame = new JFrame("Árvore Binária");
@@ -26,6 +27,7 @@ public class TreeApp {
     pBottom.add(btnSave);
     pBottom.add(btnLoad);
     pBottom.add(btnClear);
+    pBottom.add(btnSearch);
 
     ActionListener insertAction = e -> {
       try {
@@ -77,6 +79,32 @@ public class TreeApp {
 
     btnInsert.addActionListener(insertAction);
     input.addActionListener(insertAction);
+
+    btnSearch.addActionListener(e -> {
+      JDialog dialog = new JDialog(frame, "Percursos", true);
+      dialog.setLayout(new GridLayout(3, 1));
+        
+      JButton btnInOrder = new JButton("In-Order");
+      JButton btnPreOrder = new JButton("Pre-Order");
+      JButton btnPostOrder = new JButton("Post-Order");
+        
+      btnInOrder.addActionListener(ev ->
+          JOptionPane.showMessageDialog(dialog, tree.inOrder().toString()));
+      
+      btnPreOrder.addActionListener(ev ->
+          JOptionPane.showMessageDialog(dialog, tree.preOrder().toString()));
+      
+      btnPostOrder.addActionListener(ev ->
+          JOptionPane.showMessageDialog(dialog, tree.postOrder().toString()));
+      
+      dialog.add(btnInOrder);
+      dialog.add(btnPreOrder);
+      dialog.add(btnPostOrder);
+      
+      dialog.setSize(200, 150);
+      dialog.setLocationRelativeTo(frame);
+      dialog.setVisible(true);
+    });
 
     frame.add(pTop, BorderLayout.NORTH);
     frame.add(new JScrollPane(display), BorderLayout.CENTER);

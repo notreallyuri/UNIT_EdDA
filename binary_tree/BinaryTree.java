@@ -60,4 +60,24 @@ public class BinaryTree {
       System.out.println("Value " + value + " already exists in the tree.");
     }
   }
+
+
+
+  public ArrayList<Integer> preOrder() {
+    ArrayList<Integer> list = new ArrayList<>();
+    Search.NLR(root, list);
+    return list;
+  }
+
+public ArrayList<Integer> inOrder() {
+    ArrayList<Integer> list = new ArrayList<>();
+    Search.LNR(root, list);
+    return list;
+  }
+
+public ArrayList<Integer> postOrder() {
+    ArrayList<Integer> list = new ArrayList<>();
+    Search.LRN(root, list);
+    return list;
+  }
 }
