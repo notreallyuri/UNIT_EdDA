@@ -1,11 +1,56 @@
-import java.io.*;
 import java.util.*;
 
 public class BinaryTree {
+  private int parseIndex = 0;
   Node root;
 
   public void clear() {
     root = null;
+  }
+
+  public int countNodes(Node node) {
+    if (node == null)
+      return 0;
+    return 1 + countNodes(node.left) + countNodes(node.right);
+  }
+
+  public Node parseNestedString(String data) {
+    parseIndex = 0;
+    return parseRecursive(data);
+  }
+
+  private Node parseRecursive(String data) {
+    if (parseIndex >= data.length())
+      return null;
+
+    if (data.charAt(parseIndex) == '(') {
+      parseIndex++;
+    }
+
+    if (data.charAt(parseIndex) == ')') {
+      parseIndex++;
+      return null;
+    }
+
+    StringBuilder sb = new StringBuilder();
+    while (parseIndex < data.length() &&
+        (Character.isDigit(data.charAt(parseIndex)) || data.charAt(parseIndex) == '-')) {
+      sb.append(data.charAt(parseIndex));
+      parseIndex++;
+    }
+
+    int value = Integer.parseInt(sb.toString());
+    Node node = new Node(value);
+
+    node.left = parseRecursive(data);
+    node.right = parseRecursive(data);
+
+    if (parseIndex < data.length() && data.charAt(parseIndex) == ')') {
+      parseIndex++;
+
+    }
+
+    return node;
   }
 
   private void collectPreOrder(Node node, List<Integer> values) {
@@ -61,7 +106,17 @@ public class BinaryTree {
     }
   }
 
+  public String toNestedString(Node node) {
+    if (node == null)
+      return "()";
+    return "(" + node.value + toNestedString(node.left) + toNestedString(node.right) + ")";
+  }
 
+  public int getHeight(Node node) {
+    if (node == null)
+      return -1;
+    return 1 + Math.max(getHeight(node.left), getHeight(node.right));
+  }
 
   public ArrayList<Integer> preOrder() {
     ArrayList<Integer> list = new ArrayList<>();
@@ -69,13 +124,13 @@ public class BinaryTree {
     return list;
   }
 
-public ArrayList<Integer> inOrder() {
+  public ArrayList<Integer> inOrder() {
     ArrayList<Integer> list = new ArrayList<>();
     Search.LNR(root, list);
     return list;
   }
 
-public ArrayList<Integer> postOrder() {
+  public ArrayList<Integer> postOrder() {
     ArrayList<Integer> list = new ArrayList<>();
     Search.LRN(root, list);
     return list;

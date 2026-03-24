@@ -14,6 +14,7 @@ public class TreeApp {
   private JButton btnLoad = new JButton("Carregar");
   private JButton btnSave = new JButton("Salvar");
   private JButton btnSearch = new JButton("Buscar");
+  private JButton btnInformation = new JButton("Informações");
 
   public void init() {
     JFrame frame = new JFrame("Árvore Binária");
@@ -28,6 +29,7 @@ public class TreeApp {
     pBottom.add(btnLoad);
     pBottom.add(btnClear);
     pBottom.add(btnSearch);
+    pBottom.add(btnInformation);
 
     ActionListener insertAction = e -> {
       try {
@@ -49,31 +51,34 @@ public class TreeApp {
 
     btnSave.addActionListener(e -> {
       try (PrintWriter out = new PrintWriter(new FileWriter("tree.txt"))) {
-        for (int val : tree.getAllValues()) {
-          out.println(val);
-        }
-        JOptionPane.showMessageDialog(frame, "Tree saved to tree.txt");
+        String structure = tree.toNestedString(tree.root);
+        out.print(structure);
+        JOptionPane.showMessageDialog(frame, "Árvore salva: " + structure);
       } catch (IOException ex) {
-        JOptionPane.showMessageDialog(frame, "Error saving file");
+        JOptionPane.showMessageDialog(frame, "Erro ao salvar arquivo");
       }
     });
 
     btnLoad.addActionListener(e -> {
       File file = new File("tree.txt");
       if (!file.exists()) {
-        JOptionPane.showMessageDialog(frame, "No save file found!");
+        JOptionPane.showMessageDialog(frame, "Arquivo não encontrado!");
         return;
       }
-      try (Scanner fileScanner = new Scanner(file)) {
-        tree.clear();
-        while (fileScanner.hasNextInt()) {
-          tree.insert(fileScanner.nextInt());
+
+      try (Scanner scanner = new Scanner(file).useDelimiter("\\Z")) {
+        if (scanner.hasNext()) {
+          String content = scanner.next();
+
+          tree.clear();
+          tree.root = tree.parseNestedString(content.trim());
+
+          display.revalidate();
+          display.repaint();
+          JOptionPane.showMessageDialog(frame, "Árvore carregada e reconstruída!");
         }
-        display.revalidate();
-        display.repaint();
-        JOptionPane.showMessageDialog(frame, "Tree loaded!");
-      } catch (FileNotFoundException ex) {
-        ex.printStackTrace();
+      } catch (Exception ex) {
+        JOptionPane.showMessageDialog(frame, "Erro ao ler arquivo: " + ex.getMessage());
       }
     });
 
@@ -83,27 +88,36 @@ public class TreeApp {
     btnSearch.addActionListener(e -> {
       JDialog dialog = new JDialog(frame, "Percursos", true);
       dialog.setLayout(new GridLayout(3, 1));
-        
+
       JButton btnInOrder = new JButton("In-Order");
       JButton btnPreOrder = new JButton("Pre-Order");
       JButton btnPostOrder = new JButton("Post-Order");
-        
-      btnInOrder.addActionListener(ev ->
-          JOptionPane.showMessageDialog(dialog, tree.inOrder().toString()));
-      
-      btnPreOrder.addActionListener(ev ->
-          JOptionPane.showMessageDialog(dialog, tree.preOrder().toString()));
-      
-      btnPostOrder.addActionListener(ev ->
-          JOptionPane.showMessageDialog(dialog, tree.postOrder().toString()));
-      
+
+      btnInOrder.addActionListener(ev -> JOptionPane.showMessageDialog(dialog, tree.inOrder().toString()));
+
+      btnPreOrder.addActionListener(ev -> JOptionPane.showMessageDialog(dialog, tree.preOrder().toString()));
+
+      btnPostOrder.addActionListener(ev -> JOptionPane.showMessageDialog(dialog, tree.postOrder().toString()));
+
       dialog.add(btnInOrder);
       dialog.add(btnPreOrder);
       dialog.add(btnPostOrder);
-      
+
       dialog.setSize(200, 150);
       dialog.setLocationRelativeTo(frame);
       dialog.setVisible(true);
+    });
+
+    btnInformation.addActionListener(e -> {
+      int height = tree.getHeight(tree.root);
+      int nodes = tree.countNodes(tree.root);
+
+      String info = "Altura da Árvore: " + height + "\n" +
+          "Profundidade Máxima: " + height + "\n" +
+          "Nível Máximo: " + (height + 1) + "\n" +
+          "Total de Nós: " + nodes;
+
+      JOptionPane.showMessageDialog(frame, info, "Informações da Árvore", JOptionPane.INFORMATION_MESSAGE);
     });
 
     frame.add(pTop, BorderLayout.NORTH);
