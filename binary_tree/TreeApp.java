@@ -95,17 +95,26 @@ public class TreeApp {
       JButton btnInOrder = new JButton("In-Order");
       JButton btnPreOrder = new JButton("Pre-Order");
       JButton btnPostOrder = new JButton("Post-Order");
+      JButton btnClose = new JButton("Fechar");
+        
+      btnInOrder.addActionListener(ev ->
+          JOptionPane.showMessageDialog(dialog, tree.inOrder().toString()));
+      
+      btnPreOrder.addActionListener(ev ->
+          JOptionPane.showMessageDialog(dialog, tree.preOrder().toString()));
+      
+      btnPostOrder.addActionListener(ev ->
+          JOptionPane.showMessageDialog(dialog, tree.postOrder().toString()));
 
-      btnInOrder.addActionListener(ev -> JOptionPane.showMessageDialog(dialog, tree.inOrder().toString()));
-
-      btnPreOrder.addActionListener(ev -> JOptionPane.showMessageDialog(dialog, tree.preOrder().toString()));
-
-      btnPostOrder.addActionListener(ev -> JOptionPane.showMessageDialog(dialog, tree.postOrder().toString()));
-
+      btnClose.addActionListener(ev ->
+          dialog.dispose()
+      );
+      
       dialog.add(btnInOrder);
       dialog.add(btnPreOrder);
       dialog.add(btnPostOrder);
-
+      dialog.add(btnClose);
+      
       dialog.setSize(200, 150);
       dialog.setLocationRelativeTo(frame);
       dialog.setVisible(true);
