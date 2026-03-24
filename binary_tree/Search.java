@@ -33,4 +33,16 @@ public class Search {
         }
         return 1 + Math.max(height(node.left), height(node.right));
     }
+    int profundidade(Node raiz, Node alvo) {
+        if (raiz == null) return -1;
+        if (raiz == alvo) return 0;
+        
+        int profundidadeEsq = profundidade(raiz.left, alvo);
+        if (profundidadeEsq >= 0) return profundidadeEsq + 1;
+        
+        int profundidadeDir = profundidade(raiz.right, alvo);
+        if (profundidadeDir >= 0) return profundidadeDir + 1;
+        
+        return -1;
+    }
 }
