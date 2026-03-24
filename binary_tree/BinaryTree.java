@@ -59,7 +59,6 @@ public class BinaryTree {
     if (verify(value)) {
       root = insertRecursive(root, value);
     } else {
-      // Mostrar aviso na tela
       JOptionPane.showMessageDialog(null,
           "O valor " + value + " já existe na árvore.",
           "Aviso",
