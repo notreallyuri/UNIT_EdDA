@@ -135,4 +135,73 @@ public class BinaryTree {
     Search.LRN(root, list);
     return list;
   }
+
+  public String getTreeType() {
+    if (root == null) return "Árvore vazia";
+
+    boolean full = isFull(root);
+    boolean complete = isComplete(root, 0, countNodes(root));
+    int depth = getDepth(root);
+
+    boolean perfect = full && isPerfect(root, depth, 0);
+    boolean degenerate = isDegenerate(root);
+
+    if (degenerate) return "Árvore Degenerada (lista encadeada)";
+    if (perfect) return "Árvore Perfeita";
+    if (full) return "Árvore Cheia";
+    if (complete) return "Árvore Completa";
+
+    return "Árvore Não Completa";
+  }
+
+  private boolean isFull(Node node) {
+    if (node == null) return true;
+    if ((node.left == null && node.right == null)) return true;
+    if (node.left != null && node.right != null)
+      return isFull(node.left) && isFull(node.right);
+    return false;
+  }
+
+  private int getDepth(Node node) {
+    int depth = 0;
+    while (node != null) {
+      depth++;
+      node = node.left;
+    }
+    return depth;
+  }
+
+  private boolean isPerfect(Node node, int depth, int level) {
+    if (node == null) return true;
+
+    if (node.left == null && node.right == null)
+      return depth == level;
+
+    if (node.left == null || node.right == null)
+      return false;
+
+    return isPerfect(node.left, depth, level + 1) &&
+            isPerfect(node.right, depth, level + 1);
+  }
+
+  private boolean isComplete(Node node, int index, int total) {
+    if (node == null) return true;
+    if (index >= total) return false;
+
+    return isComplete(node.left, 2 * index + 1, total) &&
+            isComplete(node.right, 2 * index + 2, total);
+  }
+
+  private boolean isDegenerate(Node node) {
+    if (node == null) return true;
+
+    if (node.left != null && node.right != null)
+      return false;
+
+    if (node.left != null)
+      return isDegenerate(node.left);
+
+    return isDegenerate(node.right);
+  }
+
 }

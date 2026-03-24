@@ -111,11 +111,13 @@ public class TreeApp {
     btnInformation.addActionListener(e -> {
       int height = tree.getHeight(tree.root);
       int nodes = tree.countNodes(tree.root);
+      String type = tree.getTreeType();
 
-      String info = "Altura da Árvore: " + height + "\n" +
-          "Profundidade Máxima: " + height + "\n" +
-          "Nível Máximo: " + (height + 1) + "\n" +
-          "Total de Nós: " + nodes;
+      String info = "Tipo da Árvore: " + type + "\n\n" +
+              "Altura da Árvore: " + height + "\n" +
+              "Profundidade Máxima: " + height + "\n" +
+              "Nível Máximo: " + (height + 1) + "\n" +
+              "Total de Nós: " + nodes;
 
       JOptionPane.showMessageDialog(frame, info, "Informações da Árvore", JOptionPane.INFORMATION_MESSAGE);
     });
