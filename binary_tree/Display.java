@@ -9,7 +9,6 @@ public class Display extends JPanel {
     Display(BinaryTree tree) {
         this.tree = tree;
 
-        // Adiciona listener de clique
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -62,7 +61,6 @@ public class Display extends JPanel {
         node.x = x; // salva coordenada x
         node.y = y; // salva coordenada y
 
-        // desenha linhas para filhos
         if (node.left != null) {
             int xe = x - esp, ye = y + 80;
             line(g, x, y, xe, ye, r);
@@ -74,13 +72,11 @@ public class Display extends JPanel {
             draw(g, node.right, xd, yd, esp / 2);
         }
 
-        // desenha círculo do nó
         g.setColor(Color.WHITE);
         g.fillOval(x - r, y - r, r * 2, r * 2);
         g.setColor(Color.BLACK);
         g.drawOval(x - r, y - r, r * 2, r * 2);
 
-        // desenha valor do nó
         String s = String.valueOf(node.value);
         FontMetrics fm = g.getFontMetrics();
         g.drawString(s, x - fm.stringWidth(s) / 2, y + fm.getAscent() / 4);
@@ -95,7 +91,6 @@ public class Display extends JPanel {
         g.drawLine(xi, yi, xf, yf);
     }
 
-    // Busca nó clicado usando coordenadas armazenadas
     Node findNode(Node node, int mouseX, int mouseY) {
         if (node == null) return null;
         int r = 20;
@@ -107,11 +102,10 @@ public class Display extends JPanel {
         return encontrado;
     }
 
-    // Exibe informações do nó
     void exibirInformacoes(Node node) {
-        System.out.println("Valor: " + node.value);
-        System.out.println("Altura: " + Search.height(node));
-        System.out.println("Profundidade: " + Search.depth(tree.root,node));
-        // Aqui você poderia atualizar um JLabel ou JOptionPane para mostrar na UI
+        String info = "Valor: " + node.value +
+        "\nAltura: " + Search.height(node) +
+        "\nProfundidade: " + Search.depth(tree.root,node);
+        JOptionPane.showMessageDialog(this, info, "Informações do nó", JOptionPane.INFORMATION_MESSAGE);
     }
 }
