@@ -204,4 +204,28 @@ public class BinaryTree {
     return isDegenerate(node.right);
   }
 
+  public List<Integer> getPathTo(int value) {
+    List<Integer> path = new ArrayList<>();
+    if (findPath(root, value, path)) {
+      return path;
+    }
+    return new ArrayList<>();
+  }
+
+  private boolean findPath(Node node, int value, List<Integer> path) {
+    if (node == null) return false;
+
+    path.add(node.value);
+
+    if (node.value == value) return true;
+
+    if (value < node.value) {
+      if (findPath(node.left, value, path)) return true;
+    } else {
+      if (findPath(node.right, value, path)) return true;
+    }
+
+    path.remove(path.size() - 1);
+    return false;
+  }
 }

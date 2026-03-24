@@ -3,6 +3,7 @@ import java.io.*;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class TreeApp {
   private BinaryTree tree = new BinaryTree();
@@ -13,7 +14,8 @@ public class TreeApp {
   private JButton btnClear = new JButton("Limpar");
   private JButton btnLoad = new JButton("Carregar");
   private JButton btnSave = new JButton("Salvar");
-  private JButton btnSearch = new JButton("Buscar");
+  private JButton btnSearch = new JButton("Percurso");
+  private JButton btnPath = new JButton("Caminho");
   private JButton btnInformation = new JButton("Informações");
 
   public void init() {
@@ -29,6 +31,7 @@ public class TreeApp {
     pBottom.add(btnLoad);
     pBottom.add(btnClear);
     pBottom.add(btnSearch);
+    pBottom.add(btnPath);
     pBottom.add(btnInformation);
 
     ActionListener insertAction = e -> {
@@ -120,6 +123,27 @@ public class TreeApp {
               "Total de Nós: " + nodes;
 
       JOptionPane.showMessageDialog(frame, info, "Informações da Árvore", JOptionPane.INFORMATION_MESSAGE);
+    });
+
+    btnPath.addActionListener(e -> {
+      String inputValue = JOptionPane.showInputDialog(frame, "Digite o valor do nó:");
+
+      if (inputValue == null) return;
+
+      try {
+        int val = Integer.parseInt(inputValue);
+
+        List<Integer> path = tree.getPathTo(val);
+
+        if (path.isEmpty()) {
+          JOptionPane.showMessageDialog(frame, "Valor não encontrado!");
+        } else {
+          JOptionPane.showMessageDialog(frame, "Caminho: " + path.toString());
+        }
+
+      } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(frame, "Número inválido!");
+      }
     });
 
     frame.add(pTop, BorderLayout.NORTH);
