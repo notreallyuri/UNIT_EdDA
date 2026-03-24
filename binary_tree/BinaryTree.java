@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 public class BinaryTree {
   Node root;
 
@@ -57,7 +59,11 @@ public class BinaryTree {
     if (verify(value)) {
       root = insertRecursive(root, value);
     } else {
-      System.out.println("Value " + value + " already exists in the tree.");
+      // Mostrar aviso na tela
+      JOptionPane.showMessageDialog(null,
+          "O valor " + value + " já existe na árvore.",
+          "Aviso",
+          JOptionPane.WARNING_MESSAGE);
     }
   }
 
