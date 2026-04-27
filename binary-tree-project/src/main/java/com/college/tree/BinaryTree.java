@@ -23,7 +23,7 @@ public class BinaryTree {
     return TreeSearch.getPathTo(this.root, value);
   }
 
-  private Node insertRecursive(Node current, int value) {
+  protected Node insertRecursive(Node current, int value) {
     if (current == null) {
       return new Node(value);
     }
@@ -36,7 +36,7 @@ public class BinaryTree {
     return current;
   }
 
-  private boolean containsNode(Node current, int value) {
+  protected boolean containsNode(Node current, int value) {
     if (current == null) {
       return false;
     }
