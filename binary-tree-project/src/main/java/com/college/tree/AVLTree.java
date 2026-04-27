@@ -10,7 +10,9 @@ public class AVLTree extends BinaryTree {
   }
 
   private void updateHeight(AVLNode node) {
-    node.height = 1 + Math.max(height(node.left), height(node.right));
+    if (node instanceof AVLNode){
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+    }
   }
 
   private int getBalance(Node node) {
