@@ -25,7 +25,23 @@ public class App {
   private JButton btnInformation = new JButton("Informações");
 
   public void init() {
-    JFrame frame = new JFrame("Árvore Binária");
+    
+    String[] options = {"Árvore Binária", "Árvore AVL"};
+    int choice = JOptionPane.showOptionDialog(
+      null,
+      "Qual tipo de árvore deseja criar?",
+      "Tipo de Árvore",
+      JOptionPane.DEFAULT_OPTION,
+      JOptionPane.QUESTION_MESSAGE,
+      null,
+      options,
+      options[0]);
+
+    tree    = (choice == 1) ? new AVLTree() : new BinaryTree();
+    display = new Display(tree);
+ 
+    String titulo = (choice == 1) ? "Árvore AVL" : "Árvore Binária";
+    JFrame frame = new JFrame(titulo);
     JPanel pTop = new JPanel();
     JPanel pBottom = new JPanel();
 
