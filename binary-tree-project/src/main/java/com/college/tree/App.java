@@ -37,6 +37,10 @@ public class App {
       options,
       options[0]);
 
+    if (choice == JOptionPane.CLOSED_OPTION){
+      System.exit(0);
+    }
+
     tree    = (choice == 1) ? new AVLTree() : new BinaryTree();
     display = new Display(tree);
  
