@@ -74,6 +74,9 @@ public class App {
 
     btnClear.addActionListener(e -> {
       tree.clear();
+    if (tree instanceof AVLTree) {
+      ((AVLTree) tree).clearRotationLog();
+    }
       display.repaint();
       display.revalidate();
     });
@@ -153,6 +156,12 @@ public class App {
           "\nProfundidade Máxima: " + height +
           "\nNível Máximo: " + (height + 1) +
           "\nTotal de Nós: " + nodes;
+
+      if (tree instanceof AVLTree) {
+        List<String> log = ((AVLTree) tree).getRotationLog();
+        String historico = log.isEmpty() ? "Nenhuma rotação realizada." : String.join("\n", log);
+        info += "\n\nHistórico de Rotações:\n" + historico;
+      }
 
       JOptionPane.showMessageDialog(frame, info, "Informações da Árvore", JOptionPane.INFORMATION_MESSAGE);
     });
