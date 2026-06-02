@@ -9,6 +9,14 @@ public class AVLTree extends BinaryTree {
 
   private List<String> rotationLog = new ArrayList<>();
 
+  public List<String> getRotationLog() {
+    return rotationLog;
+  }
+
+  public void clearRotationLog() {
+    rotationLog.clear();
+  }
+
   private int height(Node node) {
     if (node == null) return 0;
     return ((AVLNode) node).height;
