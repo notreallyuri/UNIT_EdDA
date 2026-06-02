@@ -1,8 +1,13 @@
 package com.college.tree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JOptionPane;
 
 public class AVLTree extends BinaryTree {
+
+  private List<String> rotationLog = new ArrayList<>();
 
   private int height(Node node) {
     if (node == null) return 0;
@@ -30,6 +35,8 @@ public class AVLTree extends BinaryTree {
     updateHeight((AVLNode) y);
     updateHeight((AVLNode) x);
 
+    rotationLog.add("Rotação direita no nó "+ y.value);
+
     return x;
   }
 
@@ -42,6 +49,8 @@ public class AVLTree extends BinaryTree {
 
     updateHeight((AVLNode) x);
     updateHeight((AVLNode) y);
+
+    rotationLog.add("Rotação esquerda no nó " + y.value);
 
     return y;
   }
