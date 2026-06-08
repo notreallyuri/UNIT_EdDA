@@ -23,28 +23,35 @@ public class App {
   private JButton btnSearch = new JButton("Percurso");
   private JButton btnPath = new JButton("Caminho");
   private JButton btnInformation = new JButton("Informações");
+  private JButton btnHistory = new JButton("Histórico");
 
   public void init() {
-    
-    String[] options = {"Árvore Binária", "Árvore AVL"};
-    int choice = JOptionPane.showOptionDialog(
-      null,
-      "Qual tipo de árvore deseja criar?",
-      "Tipo de Árvore",
-      JOptionPane.DEFAULT_OPTION,
-      JOptionPane.QUESTION_MESSAGE,
-      null,
-      options,
-      options[0]);
 
-    if (choice == JOptionPane.CLOSED_OPTION){
+    String[] options = { "Árvore Binária", "Árvore AVL", "Árvore Red-Black" };
+    int choice = JOptionPane.showOptionDialog(
+        null,
+        "Qual tipo de árvore deseja criar?",
+        "Tipo de Árvore",
+        JOptionPane.DEFAULT_OPTION,
+        JOptionPane.QUESTION_MESSAGE,
+        null,
+        options,
+        options[0]);
+
+    if (choice == JOptionPane.CLOSED_OPTION) {
       System.exit(0);
     }
 
-    tree    = (choice == 1) ? new AVLTree() : new BinaryTree();
+    if (choice == 1) {
+      tree = new AVLTree();
+    } else if (choice == 2) {
+      tree = new RedBlackTree();
+    } else {
+      tree = new BinaryTree();
+    }
     display = new Display(tree);
- 
-    String titulo = (choice == 1) ? "Árvore AVL" : "Árvore Binária";
+
+    String titulo = options[choice];
     JFrame frame = new JFrame(titulo);
     JPanel pTop = new JPanel();
     JPanel pBottom = new JPanel();
@@ -59,6 +66,7 @@ public class App {
     pBottom.add(btnSearch);
     pBottom.add(btnPath);
     pBottom.add(btnInformation);
+    pBottom.add(btnHistory);
 
     ActionListener insertAction = e -> {
       try {
@@ -74,18 +82,29 @@ public class App {
 
     btnClear.addActionListener(e -> {
       tree.clear();
+      tree.clearRotationLog();
       display.repaint();
       display.revalidate();
     });
 
     btnSave.addActionListener(e -> {
-      try (PrintWriter out = new PrintWriter(new FileWriter("tree.txt"))) {
+      try (PrintWriter out = new PrintWriter(new FileWriter("tree.txt"));
+          PrintWriter historyOut = new PrintWriter(new FileWriter("tree_history.txt"))) {
+
         TreeParser parser = new TreeParser();
         String structure = parser.toNestedString(tree.root);
         out.print(structure);
-        JOptionPane.showMessageDialog(frame, "Árvore salva: " + structure);
+
+        List<String> log = tree.getRotationLog();
+        if (!log.isEmpty()) {
+          historyOut.print(String.join("\n", log));
+        } else {
+          historyOut.print("Nenhuma rotação registrada ou árvore não balanceável.");
+        }
+
+        JOptionPane.showMessageDialog(frame, "Árvore salva em 'tree.txt' e histórico em 'tree_history.txt'!");
       } catch (IOException ex) {
-        JOptionPane.showMessageDialog(frame, "Erro ao salvar arquivo");
+        JOptionPane.showMessageDialog(frame, "Erro ao salvar arquivos: " + ex.getMessage());
       }
     });
 
@@ -110,6 +129,23 @@ public class App {
         }
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(frame, "Erro ao ler arquivo: " + ex.getMessage());
+      }
+    });
+
+    btnHistory.addActionListener(e -> {
+      List<String> log = tree.getRotationLog();
+
+      if (log.isEmpty()) {
+        JOptionPane.showMessageDialog(frame, "Nenhuma rotação registrada para esta árvore.", "Histórico",
+            JOptionPane.INFORMATION_MESSAGE);
+      } else {
+        JTextArea textArea = new JTextArea(15, 30);
+        textArea.setText(String.join("\n", log));
+        textArea.setEditable(false);
+        textArea.setMargin(new Insets(5, 5, 5, 5));
+
+        JOptionPane.showMessageDialog(frame, new JScrollPane(textArea), "Histórico de Rotações",
+            JOptionPane.PLAIN_MESSAGE);
       }
     });
 
@@ -153,6 +189,12 @@ public class App {
           "\nProfundidade Máxima: " + height +
           "\nNível Máximo: " + (height + 1) +
           "\nTotal de Nós: " + nodes;
+
+      if (tree instanceof AVLTree) {
+        List<String> log = ((AVLTree) tree).getRotationLog();
+        String historico = log.isEmpty() ? "Nenhuma rotação realizada." : String.join("\n", log);
+        info += "\n\nHistórico de Rotações:\n" + historico;
+      }
 
       JOptionPane.showMessageDialog(frame, info, "Informações da Árvore", JOptionPane.INFORMATION_MESSAGE);
     });
