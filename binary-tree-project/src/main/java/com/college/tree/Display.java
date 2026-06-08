@@ -79,13 +79,21 @@ public class Display extends JPanel {
       draw(g, node.right, xd, yd, esp / 2);
     }
 
-    g.setColor(Color.WHITE);
+    if (node instanceof RedBlackNode) {
+      RedBlackNode rbNode = (RedBlackNode) node;
+      g.setColor(rbNode.color == RedBlackNode.RED ? new Color(220, 50, 50) : Color.DARK_GRAY);
+    } else {
+      g.setColor(Color.WHITE);
+    }
+
     g.fillOval(x - r, y - r, r * 2, r * 2);
     g.setColor(Color.BLACK);
     g.drawOval(x - r, y - r, r * 2, r * 2);
 
     String s = String.valueOf(node.value);
     FontMetrics fm = g.getFontMetrics();
+
+    g.setColor((node instanceof RedBlackNode) ? Color.WHITE : Color.BLACK);
     g.drawString(s, x - fm.stringWidth(s) / 2, y + fm.getAscent() / 4);
   }
 

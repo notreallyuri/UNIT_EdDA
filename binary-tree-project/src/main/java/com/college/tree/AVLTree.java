@@ -6,30 +6,33 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 public class AVLTree extends BinaryTree {
-
   private List<String> rotationLog = new ArrayList<>();
 
+  @Override
   public List<String> getRotationLog() {
     return rotationLog;
   }
 
+  @Override
   public void clearRotationLog() {
     rotationLog.clear();
   }
 
   private int height(Node node) {
-    if (node == null) return 0;
+    if (node == null)
+      return 0;
     return ((AVLNode) node).height;
   }
 
   private void updateHeight(AVLNode node) {
-    if (node instanceof AVLNode){
-        node.height = 1 + Math.max(height(node.left), height(node.right));
+    if (node instanceof AVLNode) {
+      node.height = 1 + Math.max(height(node.left), height(node.right));
     }
   }
 
   private int getBalance(Node node) {
-    if (node == null) return 0;
+    if (node == null)
+      return 0;
     return height(node.left) - height(node.right);
   }
 
@@ -43,7 +46,7 @@ public class AVLTree extends BinaryTree {
     updateHeight((AVLNode) y);
     updateHeight((AVLNode) x);
 
-    rotationLog.add("Rotação direita no nó "+ y.value);
+    rotationLog.add("Rotação direita no nó " + y.value);
 
     return x;
   }
@@ -113,7 +116,6 @@ public class AVLTree extends BinaryTree {
           JOptionPane.WARNING_MESSAGE);
     }
   }
-
 
   @Override
   public String getTreeType() {

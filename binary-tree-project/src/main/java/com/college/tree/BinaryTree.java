@@ -23,6 +23,13 @@ public class BinaryTree {
     return TreeSearch.getPathTo(this.root, value);
   }
 
+  public List<String> getRotationLog() {
+    return new ArrayList<>();
+  }
+
+  public void clearRotationLog() {
+  }
+
   protected Node insertRecursive(Node current, int value) {
     if (current == null) {
       return new Node(value);
