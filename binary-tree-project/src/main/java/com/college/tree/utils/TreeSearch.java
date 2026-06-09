@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TreeSearch {
+
   public static List<Integer> getPathTo(Node root, int value) {
     List<Integer> path = new ArrayList<>();
     if (findPath(root, value, path)) {
@@ -34,35 +35,49 @@ public class TreeSearch {
     return false;
   }
 
-  public static void NLR(Node node, ArrayList<Integer> list) {
-    if (node == null) {
-      return;
-    }
-
-    list.add(node.value);
-    NLR(node.left, list);
-    NLR(node.right, list);
+  public static List<Integer> getPreOrder(Node node) {
+    List<Integer> result = new ArrayList<>();
+    accumulatePreOrder(node, result);
+    return result;
   }
 
-  public static void LNR(Node node, ArrayList<Integer> list) {
-    if (node == null) {
+  private static void accumulatePreOrder(Node node, List<Integer> result) {
+    if (node == null)
       return;
-    }
-
-    LNR(node.left, list);
-    list.add(node.value);
-    LNR(node.right, list);
+    result.add(node.value);
+    accumulatePreOrder(node.left, result);
+    accumulatePreOrder(node.right, result);
   }
 
-  public static void LRN(Node node, ArrayList<Integer> list) {
-    if (node == null) {
-      return;
-    }
-
-    LRN(node.left, list);
-    LRN(node.right, list);
-    list.add(node.value);
+  public static List<Integer> getInOrder(Node node) {
+    List<Integer> result = new ArrayList<>();
+    accumulateInOrder(node, result);
+    return result;
   }
+
+  private static void accumulateInOrder(Node node, List<Integer> result) {
+    if (node == null)
+      return;
+    accumulateInOrder(node.left, result);
+    result.add(node.value);
+    accumulateInOrder(node.right, result);
+  }
+
+  public static List<Integer> getPostOrder(Node node) {
+    List<Integer> result = new ArrayList<>();
+    accumulatePostOrder(node, result);
+    return result;
+  }
+
+  private static void accumulatePostOrder(Node node, List<Integer> result) {
+    if (node == null)
+      return;
+    accumulatePostOrder(node.left, result);
+    accumulatePostOrder(node.right, result);
+    result.add(node.value);
+  }
+
+  // --- Tree Metrics ---
 
   public static int height(Node node) {
     if (node == null) {

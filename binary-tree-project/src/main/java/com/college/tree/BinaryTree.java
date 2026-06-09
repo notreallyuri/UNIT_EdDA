@@ -68,21 +68,15 @@ public class BinaryTree {
     }
   }
 
-  public ArrayList<Integer> preOrder() {
-    ArrayList<Integer> list = new ArrayList<>();
-    TreeSearch.NLR(root, list);
-    return list;
+  public List<Integer> preOrder() {
+    return TreeSearch.getPreOrder(root);
   }
 
-  public ArrayList<Integer> inOrder() {
-    ArrayList<Integer> list = new ArrayList<>();
-    TreeSearch.LNR(root, list);
-    return list;
+  public List<Integer> inOrder() {
+    return TreeSearch.getInOrder(root);
   }
 
-  public ArrayList<Integer> postOrder() {
-    ArrayList<Integer> list = new ArrayList<>();
-    TreeSearch.LRN(root, list);
-    return list;
+  public List<Integer> postOrder() {
+    return TreeSearch.getPostOrder(root);
   }
 }

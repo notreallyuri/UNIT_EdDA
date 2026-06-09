@@ -4,21 +4,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.college.tree.utils.TreeSearch;
 
 public class Display extends JPanel {
-  BinaryTree tree;
+  private final BinaryTree tree;
+  private final Map<Node, Point> nodeHitboxes = new HashMap<>();
 
-  Display(BinaryTree tree) {
+  public Display(BinaryTree tree) {
     this.tree = tree;
 
     addMouseListener(new MouseAdapter() {
       @Override
       public void mouseClicked(MouseEvent e) {
-        Node clicado = findNode(tree.root, e.getX(), e.getY());
-        if (clicado != null) {
-          exibirInformacoes(clicado);
+        Node clicked = findNode(e.getX(), e.getY());
+        if (clicked != null) {
+          showNodeInformation(clicked);
         }
       }
     });
@@ -46,6 +49,9 @@ public class Display extends JPanel {
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
+
+    nodeHitboxes.clear();
+
     if (tree.root == null)
       return;
 
@@ -59,72 +65,73 @@ public class Display extends JPanel {
     draw(g2, tree.root, centerX, 60, initialEsp);
   }
 
-  void draw(Graphics2D g, Node node, int x, int y, int esp) {
+  private void draw(Graphics2D g, Node node, int x, int y, int esp) {
     if (node == null)
       return;
 
-    int r = 20;
+    int size = 40;
+    int halfSize = size / 2;
 
-    node.x = x;
-    node.y = y;
+    nodeHitboxes.put(node, new Point(x, y));
 
     if (node.left != null) {
       int xe = x - esp, ye = y + 80;
-      line(g, x, y, xe, ye, r);
+      drawLineToSquare(g, x, y, xe, ye, halfSize);
       draw(g, node.left, xe, ye, esp / 2);
     }
     if (node.right != null) {
       int xd = x + esp, yd = y + 80;
-      line(g, x, y, xd, yd, r);
+      drawLineToSquare(g, x, y, xd, yd, halfSize);
       draw(g, node.right, xd, yd, esp / 2);
     }
 
-    if (node instanceof RedBlackNode) {
-      RedBlackNode rbNode = (RedBlackNode) node;
-      g.setColor(rbNode.color == RedBlackNode.RED ? new Color(220, 50, 50) : Color.DARK_GRAY);
+    if (node.isHighlightTheme()) {
+      g.setColor(new Color(220, 50, 50));
+    } else if (node.isDarkTheme()) {
+      g.setColor(Color.DARK_GRAY);
     } else {
       g.setColor(Color.WHITE);
     }
 
-    g.fillOval(x - r, y - r, r * 2, r * 2);
+    int startX = x - halfSize;
+    int startY = y - halfSize;
+    g.fillRect(startX, startY, size, size);
     g.setColor(Color.BLACK);
-    g.drawOval(x - r, y - r, r * 2, r * 2);
+    g.drawRect(startX, startY, size, size);
 
     String s = String.valueOf(node.value);
     FontMetrics fm = g.getFontMetrics();
 
-    g.setColor((node instanceof RedBlackNode) ? Color.WHITE : Color.BLACK);
+    g.setColor((node.isHighlightTheme() || node.isDarkTheme()) ? Color.WHITE : Color.BLACK);
     g.drawString(s, x - fm.stringWidth(s) / 2, y + fm.getAscent() / 4);
   }
 
-  void line(Graphics2D g, int x1, int y1, int x2, int y2, int r) {
-    double ang = Math.atan2(y2 - y1, x2 - x1);
-    int xi = (int) (x1 + r * Math.cos(ang));
-    int yi = (int) (y1 + r * Math.sin(ang));
-    int xf = (int) (x2 - r * Math.cos(ang));
-    int yf = (int) (y2 - r * Math.sin(ang));
+  private void drawLineToSquare(Graphics2D g, int x1, int y1, int x2, int y2, int halfSize) {
+    int xi = x1;
+    int yi = y1 + halfSize;
+    int xf = x2;
+    int yf = y2 - halfSize;
     g.drawLine(xi, yi, xf, yf);
   }
 
-  Node findNode(Node node, int mouseX, int mouseY) {
-    if (node == null)
-      return null;
-    int r = 20;
-    double dist = Math.hypot(mouseX - node.x, mouseY - node.y);
-    if (dist <= r)
-      return node;
+  private Node findNode(int mouseX, int mouseY) {
+    int halfSize = 20;
+    for (Map.Entry<Node, Point> entry : nodeHitboxes.entrySet()) {
+      Point p = entry.getValue();
 
-    Node encontrado = findNode(node.left, mouseX, mouseY);
-    if (encontrado == null)
-      encontrado = findNode(node.right, mouseX, mouseY);
-    return encontrado;
+      if (mouseX >= p.x - halfSize && mouseX <= p.x + halfSize &&
+          mouseY >= p.y - halfSize && mouseY <= p.y + halfSize) {
+        return entry.getKey();
+      }
+    }
+    return null;
   }
 
-  void exibirInformacoes(Node node) {
+  private void showNodeInformation(Node node) {
     String info = "Valor: " + node.value +
-        "\nNivel: " + TreeSearch.depth(tree.root, node) +
+        "\nNível: " + TreeSearch.depth(tree.root, node) +
         "\nAltura: " + TreeSearch.height(node) +
         "\nProfundidade: " + TreeSearch.depth(tree.root, node);
-    JOptionPane.showMessageDialog(this, info, "Informações do nó", JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(this, info, "Informações do Nó", JOptionPane.INFORMATION_MESSAGE);
   }
 }

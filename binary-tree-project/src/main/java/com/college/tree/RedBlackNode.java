@@ -12,4 +12,14 @@ public class RedBlackNode extends Node {
     this.color = RED;
     this.parent = null;
   }
+
+  @Override
+  public boolean isDarkTheme() {
+    return color == BLACK;
+  }
+
+  @Override
+  public boolean isHighlightTheme() {
+    return color == RED;
+  }
 }

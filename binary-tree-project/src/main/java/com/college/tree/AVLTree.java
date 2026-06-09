@@ -25,9 +25,7 @@ public class AVLTree extends BinaryTree {
   }
 
   private void updateHeight(AVLNode node) {
-    if (node instanceof AVLNode) {
-      node.height = 1 + Math.max(height(node.left), height(node.right));
-    }
+    node.height = 1 + Math.max(height(node.left), height(node.right));
   }
 
   private int getBalance(Node node) {
@@ -77,7 +75,7 @@ public class AVLTree extends BinaryTree {
     } else if (value > current.value) {
       current.right = insertRecursive(current.right, value);
     } else {
-      return current; // duplicatas ignoradas
+      return current;
     }
 
     updateHeight((AVLNode) current);
