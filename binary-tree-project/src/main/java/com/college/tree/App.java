@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.*;
 
 import com.college.tree.utils.*;
+import com.formdev.flatlaf.FlatDarculaLaf;
 
 public class App {
   private final BinaryTree tree;
@@ -196,6 +197,8 @@ public class App {
   }
 
   public static void main(String[] args) {
+    FlatDarculaLaf.setup();
+
     SwingUtilities.invokeLater(() -> {
       App app = new App();
       app.init();
